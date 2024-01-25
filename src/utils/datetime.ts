@@ -136,7 +136,13 @@ export function getCountOfEventsAtEvent(
   return eventList.filter(
     (e) =>
       dayjs(event.start).isBetween(e.start, e.end, 'minute', '[)') ||
-      dayjs(e.start).isBetween(event.start, event.end, 'minute', '[)'),
+      (dayjs(e.start).isBetween(event.start, event.end, 'minute', '[]') &&
+        dayjs(e.start).isBetween(
+          dayjs(event.start).startOf('h'),
+          dayjs(event.end).endOf('h'),
+          'minute',
+          '[)',
+        )),
   ).length
 }
 
@@ -273,18 +279,22 @@ export function getStyleForOverlappingEvent(
   eventPosition: number,
   overlapOffset: number,
   palettes: Palette[],
+  eventCount: number,
 ) {
   let overlapStyle = {}
   const offset = overlapOffset
   const start = eventPosition * offset
   const zIndex = 100 + eventPosition
   const bgColors = palettes.map((p) => p.main)
+
   overlapStyle = {
     start: start + OVERLAP_PADDING,
     end: OVERLAP_PADDING,
+    width: `${100 / eventCount}%`,
     backgroundColor: bgColors[eventPosition % bgColors.length] || bgColors[0],
     zIndex,
   }
+
   return overlapStyle
 }
 
