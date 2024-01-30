@@ -135,14 +135,14 @@ export function getCountOfEventsAtEvent(
 ) {
   return eventList.filter(
     (e) =>
-      dayjs(event.start).isBetween(e.start, e.end, 'minute', '[)') ||
-      (dayjs(e.start).isBetween(event.start, event.end, 'minute', '[]') &&
-        dayjs(e.start).isBetween(
-          dayjs(event.start).startOf('h'),
-          dayjs(event.end).endOf('h'),
-          'minute',
-          '[)',
-        )),
+      (dayjs(event.start).isBetween(e.start, e.end, 'minute', '[)') ||
+        dayjs(e.start).isBetween(event.start, event.end, 'minute', '[]')) &&
+      dayjs(e.start).isBetween(
+        dayjs(event.start).startOf('h'),
+        dayjs(event.end).endOf('h'),
+        'minute',
+        '[]',
+      ),
   ).length
 }
 
@@ -151,7 +151,13 @@ export function getOrderOfEvent(event: ICalendarEventBase, eventList: ICalendarE
     .filter(
       (e) =>
         dayjs(event.start).isBetween(e.start, e.end, 'minute', '[)') ||
-        dayjs(e.start).isBetween(event.start, event.end, 'minute', '[)'),
+        (dayjs(e.start).isBetween(event.start, event.end, 'minute', '[)') &&
+          dayjs(e.start).isBetween(
+            dayjs(event.start).startOf('h'),
+            dayjs(event.end).endOf('h'),
+            'minute',
+            '[)',
+          )),
     )
     .sort((a, b) => {
       if (dayjs(a.start).isSame(b.start)) {
