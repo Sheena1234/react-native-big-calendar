@@ -64,6 +64,8 @@ interface CalendarBodyProps<T extends ICalendarEventBase> {
   enrichedEventsByDate?: Record<string, T[]>
   enableEnrichedEvents?: boolean
   eventsAreSorted?: boolean
+  onScroll?: any
+  onScrollToTop?: any
 }
 
 function _CalendarBody<T extends ICalendarEventBase>({
@@ -93,6 +95,8 @@ function _CalendarBody<T extends ICalendarEventBase>({
   enrichedEventsByDate,
   enableEnrichedEvents = false,
   eventsAreSorted = false,
+  onScroll,
+  onScrollToTop,
 }: CalendarBodyProps<T>) {
   const scrollView = React.useRef<ScrollView>(null)
   const { now } = useNow(!hideNowIndicator)
@@ -248,6 +252,8 @@ function _CalendarBody<T extends ICalendarEventBase>({
           style,
         ]}
         ref={scrollView}
+        onScroll={onScroll}
+        onScrollToTop={onScrollToTop}
         scrollEventThrottle={32}
         {...(Platform.OS !== 'web' ? panResponder.panHandlers : {})}
         showsVerticalScrollIndicator={showVerticalScrollIndicator}
